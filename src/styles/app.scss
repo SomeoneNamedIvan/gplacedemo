@@ -1,0 +1,15 @@
+// libraries
+@import "~react-toastify/dist/ReactToastify.css";
+
+@import "default";
+@import "mixin";
+
+#gmap-page {
+    width: 100%;
+    height: inherit;
+
+    .map-body {
+        width: 100%;
+        height: 100%;
+    }
+}
