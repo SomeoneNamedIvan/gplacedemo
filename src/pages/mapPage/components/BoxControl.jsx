@@ -1,7 +1,7 @@
 import {withSelector} from "../../../hoc/withSelector";
-import React, {useEffect, useMemo, useRef, useState} from "react";
-import {Box, Card, IconButton, InputAdornment, TextField} from "@material-ui/core";
-import {useDispatch, useSelector} from "react-redux";
+import React, {useEffect, useRef, useState} from "react";
+import {Card, IconButton, InputAdornment, TextField} from "@material-ui/core";
+import {useDispatch} from "react-redux";
 import ACTION_TYPES from "../../../states/actions/actionTypesConst";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
@@ -17,6 +17,7 @@ export default withSelector(({mapData}) => {
     const dispatch = useDispatch();
 
     const handlePlaceChange = () => {
+        console.log({current:clearRef.current, clearText})
         if (!clearRef.current) {
             dispatch({type: ACTION_TYPES.PLACE_CHANGED, payload: autoComplete});
         }
@@ -50,17 +51,16 @@ export default withSelector(({mapData}) => {
 
     useEffect(() => {
         if (clearText) {
-            resetClearCounterWhenTimeout();
+            resetClearTextCounter();
         }
     }, [clearText]);
 
-    const resetClearCounterWhenTimeout = () => {
-        let timeout = setTimeout(() => {
-            autoComplete.set("place", null);
-            setText("");
-            setClearText(false);
-            clearTimeout(timeout);
-        }, 0);
+    // previously using setTimeout 0
+    // feels like using useEffect hook to handle to be more appropriate
+    const resetClearTextCounter = () => {
+        autoComplete.set("place", null);
+        setText("");
+        setClearText(false);
     };
 
     const handleClearSearch = () => {
