@@ -16,7 +16,7 @@ export default withSelector(({mapData}) => {
 
     const dispatch = useDispatch();
 
-    const handlePlaceChange = () => () => {
+    const handlePlaceChange = () => {
         if (!clearRef.current) {
             dispatch({type: ACTION_TYPES.PLACE_CHANGED, payload: autoComplete});
         }
@@ -44,7 +44,7 @@ export default withSelector(({mapData}) => {
     useEffect(() => {
         if (autoComplete) {
             autoComplete.bindTo("bounds", mapData);
-            autoComplete.addListener("place_changed", handlePlaceChange());
+            autoComplete.addListener("place_changed", handlePlaceChange);
         }
     }, [autoComplete]);
 
