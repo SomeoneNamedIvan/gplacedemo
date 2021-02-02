@@ -8,4 +8,9 @@ const updatePlace = (place) => {
     return {type: ACTION_TYPES.PLACE_UPDATED, payload: place};
 };
 
-export {clearInfo, updatePlace};
+const addPlaceToList = (place) => {
+    return {type: ACTION_TYPES.ADD_PLACE, payload: place};
+
+}
+
+export {clearInfo, updatePlace,addPlaceToList};

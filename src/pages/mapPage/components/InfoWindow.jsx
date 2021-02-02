@@ -1,20 +1,86 @@
-import React, {useMemo} from "react";
-import {useSelector} from "react-redux";
-import {Box} from "@material-ui/core";
+import React, {useEffect, useRef, useState} from "react";
+import {withSelector} from "../../../hoc/withSelector";
 
-const InfoWindow = () => {
-    const map = useSelector(d => d.map);
+export default withSelector(({mapData, currentPlace: place}) => {
+    const boxRef = useRef();
+    const [marker, setMarker] = useState(null);
+    const [infoWindow, setInfoWindow] = useState(null);
+    const [geocoder, setGeocoder] = useState(null);
 
-    useMemo(() => {
+    useEffect(() => {
+        if (mapData) {
+            initMarker();
+            initInfoWindow();
+            initGeocoder();
+        }
+    }, [mapData]);
 
-    }, [map]);
+    useEffect(() => {
+        onPlaceChange();
+    }, [place]);
+
+    useEffect(() => {
+        if (marker && infoWindow) {
+            marker.addListener("click", handleMarkerClick);
+            marker.addListener("dragend", handleMarkerDragEnd);
+        }
+    }, [marker, infoWindow]);
+
+    const onPlaceChange = () => {
+        if (!(marker && infoWindow)) {
+            return;
+        }
+        if (!place) {
+            infoWindow.close();
+            marker.visible = false;
+        } else {
+            marker.setPosition(place.geometry?.location);
+            marker.visible = true;
+            infoWindow.open(mapData, marker);
+        }
+    };
+
+    const handleMarkerClick = () => {
+        infoWindow.open(mapData, marker);
+    };
+
+    const handleMarkerDragEnd = (event) => {
+        geocoder.geocode({location: event.latLng}, (result, status) => {
+            console.log({result, status});
+        });
+
+    };
+
+    const initMarker = () => {
+        const _marker = new google.maps.Marker({
+            map: mapData,
+            draggable: true,
+            anchorPoint: new google.maps.Point(0, -29),
+            animation: google.maps.Animation.DROP
+        });
+
+        setMarker(_marker);
+    };
+
+    const initInfoWindow = () => {
+        const _infoWindow = new google.maps.InfoWindow();
+        _infoWindow.setContent(boxRef?.current);
+        setInfoWindow(_infoWindow);
+    };
+
+    const initGeocoder = () => {
+        const _geocoder = new google.maps.Geocoder();
+        setGeocoder(_geocoder);
+    };
+
 
     return (
-        <Box>
-
-        </Box>
+        <div ref={boxRef}>
+            <span>{place?.name}</span><br/>
+            <span>{place?.formatted_address}</span>
+        </div>
     );
-};
+});
 
-export default InfoWindow;
+
 

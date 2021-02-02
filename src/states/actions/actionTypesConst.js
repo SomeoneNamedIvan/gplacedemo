@@ -1,6 +1,9 @@
 const listActions = {
     ADD_PLACE: "ADD_PLACE",
-    GET_PLACES: "GET_PLACE"
+    GET_PLACES: "GET_PLACE",
+    REMOVE_PLACE: "REMOVE_PLACE",
+    REMOVE_PLACE_ALL: "REMOVE_PLACE_ALL",
+    NAVIGATE_PLACE: "NAVIGATE_PLACE"
 };
 
 const placeActions = {

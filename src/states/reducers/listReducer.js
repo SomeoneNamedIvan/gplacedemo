@@ -9,6 +9,7 @@ export default (state = defaultState, action) => {
     const newState = {};
     switch (action.type) {
         case ACTION_TYPES.GET_PLACES:
+            newState.placeList = action.payload;
             break;
     }
 

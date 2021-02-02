@@ -12,4 +12,81 @@
         width: 100%;
         height: 100%;
     }
+
+    .autocomplete-wrap {
+        position: fixed;
+        z-index: 1;
+        top: 20px;
+        width: 500px;
+        right: 50%;
+        padding: 10px 20px;
+        @include transform(translate(50%));
+
+        .input-wrap {
+            width: 100%;
+        }
+    }
+
+    .place-container {
+        position: fixed;
+        z-index: 1;
+        top: 120px;
+        left: 20px;
+
+        & button {
+            &:nth-child(1) {
+                z-index: 2;
+            }
+
+            &:nth-child(2) {
+                z-index: 1;
+            }
+        }
+
+        .clear-all {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+            opacity: 0;
+            @include transform(translateY(0px));
+            @include transition(all 500ms ease);
+
+            &.show {
+                opacity: 1;
+                @include transform(translateY(-60px));
+            }
+        }
+
+        .place-list {
+            position: absolute;
+            top: 66px;
+            left: 28px;
+            transform-origin: top left;
+            overflow-y: auto;
+            max-height: 0;
+
+            @include transform(scale(0));
+            @include transition(all 300ms ease);
+
+            & > * {
+                opacity: 0;
+            }
+
+            &.expanded {
+                width: 300px;
+                max-height: 500px;
+                @include transform(scale(1));
+
+                & > * {
+                    opacity: 1;
+                }
+            }
+
+            & > div {
+                padding: 0;
+            }
+        }
+    }
+
 }

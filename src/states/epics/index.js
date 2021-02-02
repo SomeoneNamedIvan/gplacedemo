@@ -1,9 +1,9 @@
-import {listItemEpic} from "./listEpics";
+import {listItemEpic, navigateEpic} from "./listEpics";
 import {searchingEpic} from "./placeEpic";
 import {combineEpics} from "redux-observable";
 import {catchError} from "rxjs/operators";
 
-const epics = [listItemEpic, searchingEpic];
+const epics = [listItemEpic, navigateEpic, searchingEpic];
 
 const rootEpic = (action$, store$, dependencies) =>
     combineEpics(...epics)(action$, store$, dependencies).pipe(
