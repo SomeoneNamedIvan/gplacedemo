@@ -5,17 +5,19 @@ import {useDispatch, useSelector} from "react-redux";
 import ACTION_TYPES from "../../../states/actions/actionTypesConst";
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-let clear = false;
 export default withSelector(({mapData}) => {
     const [autoComplete, setAutoComplete] = useState(null);
     const [text, setText] = useState("");
     const searchInput = useRef(null);
     const control = useRef(null);
+    const [clearText, setClearText] = useState(false);
+    const clearRef = useRef(clearText);
+    clearRef.current = clearText;
 
     const dispatch = useDispatch();
 
-    const handlePlaceChange = () => {
-        if (!clear) {
+    const handlePlaceChange = () => () => {
+        if (!clearRef.current) {
             dispatch({type: ACTION_TYPES.PLACE_CHANGED, payload: autoComplete});
         }
     };
@@ -42,18 +44,27 @@ export default withSelector(({mapData}) => {
     useEffect(() => {
         if (autoComplete) {
             autoComplete.bindTo("bounds", mapData);
-            autoComplete.addListener("place_changed", handlePlaceChange);
+            autoComplete.addListener("place_changed", handlePlaceChange());
         }
     }, [autoComplete]);
 
-    const handleClearSearch = () => {
-        clear = true;
-        autoComplete.set("place", null);
-        setText("");
+    useEffect(() => {
+        if (clearText) {
+            resetClearCounterWhenTimeout();
+        }
+    }, [clearText]);
+
+    const resetClearCounterWhenTimeout = () => {
         let timeout = setTimeout(() => {
-            clear = false;
+            autoComplete.set("place", null);
+            setText("");
+            setClearText(false);
             clearTimeout(timeout);
-        }, 1000);
+        }, 0);
+    };
+
+    const handleClearSearch = () => {
+        setClearText(true);
     };
 
     const handleChange = (e) => {
